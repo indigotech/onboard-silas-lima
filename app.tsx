@@ -71,10 +71,13 @@
              backgroundColor: isDarkMode ? Colors.black : Colors.white,
            }}>
            <Section title="Bem-Vindo(a) à Taqtile!"/>
+
            <Text style={styles.inputTitle}>E-mail</Text>
            <TextInput style={styles.inputContainer}></TextInput>
+
            <Text style={styles.inputTitle}>Senha</Text>
            <TextInput style={styles.inputContainer}></TextInput>
+           
            <Button title='Entrar' color="#841584"/>
          </View>
        </ScrollView>
