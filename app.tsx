@@ -108,7 +108,7 @@ const App = () => {
       }
     });
   
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     const isValidEmail = !emailValidator.test(email);
     const isValidPassword = !passwordValidator.test(password);
 
