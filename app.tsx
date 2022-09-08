@@ -10,8 +10,9 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { ApolloClient, InMemoryCache, useMutation, gql } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -46,9 +47,22 @@ const Section: React.FC<
 const emailValidator = new RegExp('[a-zA-Z0-9.]+@[a-zA-Z0-9]+[.][a-zA-Z]+([.][a-zA-Z]+)?');
 const passwordValidator = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{7,}');
 
+const client = new ApolloClient({
+  uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
+  cache: new InMemoryCache()
+});
+
+const loginGQL = gql`
+  mutation($input: LoginInputType!){
+    login(data: $input)
+    {
+      token
+    }
+  }
+`
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -57,13 +71,54 @@ const App = () => {
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
-
+  const [authError, setAuthError] = useState(false);
   
+  const [token, setToken] = useState('');
+  
+  const storeToken = async (value: string) => {
+    try {
+      await AsyncStorage.setItem('@token', value)
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
-  const handleSubmit = () => {
-    // Validating Email and Password
-    setEmailError(!emailValidator.test(email));
-    setPasswordError(!passwordValidator.test(password))
+  const getToken = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@token')
+      if(value !== null) {
+        setToken(value);
+      }
+      else{
+        setToken('');
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  const [loginMutation, {loading, error}] = useMutation(loginGQL, 
+    {
+      client: client, 
+      onCompleted: (data) => {
+        storeToken(data.login.token);
+      },
+      onError: () => {
+        setAuthError(true);
+      }
+    });
+  
+  const handleSubmit = async () => {
+    const isValidEmail = !emailValidator.test(email);
+    const isValidPassword = !passwordValidator.test(password);
+
+    setEmailError(isValidEmail);
+    setPasswordError(isValidPassword);
+    setAuthError(false);
+
+    if (!isValidEmail && !isValidPassword){
+      loginMutation({variables: {input: { email: email, password: password}}});
+    }
   }
 
   return (
@@ -78,9 +133,7 @@ const App = () => {
           }}>
           <Section title="Bem-Vindo(a) à Taqtile!"/>
 
-          <Text style={styles.inputTitle}>
-            E-mail
-          </Text>
+          <Text style={styles.inputTitle}> E-mail </Text>
           {emailError && <Text style={styles.errorMessage}>
             Insira um endereço de e-mail válido!
           </Text>}
@@ -91,9 +144,7 @@ const App = () => {
             onChangeText={(e) => setEmail(e)}
           />
 
-          <Text style={styles.inputTitle}>
-            Senha
-          </Text>
+          <Text style={styles.inputTitle}> Senha </Text>
           {passwordError && <Text style={styles.errorMessage}>
             Insira uma senha válida!
             {'\n'}- Mínimo de 7 caracteres
@@ -106,7 +157,8 @@ const App = () => {
             onChangeText={(p) => setPassword(p)}
           />
           
-          <Button title='Entrar' onPress={handleSubmit} color="#841584"/>
+          <Button title={'Entrar'} onPress={handleSubmit} disabled={loading} color="#841584"/>
+          {authError &&<Text style={styles.errorMessage}>{error?.message}</Text>}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -148,6 +200,5 @@ const styles = StyleSheet.create({
     color: 'red',
   }
 });
-
 
 export default App;
