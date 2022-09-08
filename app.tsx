@@ -11,8 +11,12 @@ import {
   View,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import { ApolloClient, InMemoryCache, useMutation, gql } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { emailValidator, passwordValidator } from './regex';
+import { loginMutationGQL } from './graphql/mutations';
+import { client } from './services/apollo';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -43,23 +47,6 @@ const Section: React.FC<
     </View>
   );
 };
-
-const emailValidator = new RegExp('[a-zA-Z0-9.]+@[a-zA-Z0-9]+[.][a-zA-Z]+([.][a-zA-Z]+)?');
-const passwordValidator = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{7,}');
-
-const client = new ApolloClient({
-  uri: 'https://tq-template-server-sample.herokuapp.com/graphql',
-  cache: new InMemoryCache()
-});
-
-const loginGQL = gql`
-  mutation($input: LoginInputType!){
-    login(data: $input)
-    {
-      token
-    }
-  }
-`
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -97,7 +84,7 @@ const App = () => {
     }
   }
 
-  const [loginMutation, {loading, error}] = useMutation(loginGQL, 
+  const [loginMutation, {loading, error}] = useMutation(loginMutationGQL, 
     {
       client: client, 
       onCompleted: (data) => {
@@ -109,14 +96,14 @@ const App = () => {
     });
   
   const handleSubmit = () => {
-    const isValidEmail = !emailValidator.test(email);
-    const isValidPassword = !passwordValidator.test(password);
+    const isValidEmail = emailValidator.test(email);
+    const isValidPassword = passwordValidator.test(password);
 
-    setEmailError(isValidEmail);
-    setPasswordError(isValidPassword);
+    setEmailError(!isValidEmail);
+    setPasswordError(!isValidPassword);
     setAuthError(false);
 
-    if (!isValidEmail && !isValidPassword){
+    if (isValidEmail && isValidPassword){
       loginMutation({variables: {input: { email: email, password: password}}});
     }
   }

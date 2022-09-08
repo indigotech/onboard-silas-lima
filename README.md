@@ -9,9 +9,9 @@ Environment and Tools
 - Xcode 13.4.1 (13F100) - iOS 15.4 Simulator
 - Node 14.12.0
 - Pod 1.11.3
-- Apollo ˆ3.6.9
-- Async-storage ˆ1.17.10
-- Graphql ˆ16.6.0
+- Apollo 3.6.9
+- Async-storage 1.17.10
+- Graphql 16.6.0
 
 Steps to run and debug
 - Open the terminal on the root of the project and run the command
