@@ -16,6 +16,7 @@ import { useMutation } from '@apollo/client';
 import { loginMutationGQL } from './graphql/mutations';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React, {useState, type PropsWithChildren} from 'react';
+import { Navigation } from 'react-native-navigation';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -47,7 +48,7 @@ const Section: React.FC<
   );
 };
 
-const App = () => {
+const App = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -66,6 +67,11 @@ const App = () => {
       client: client, 
       onCompleted: (data) => {
         setValue('@token', data.login.token);
+        Navigation.push(props.componentId, {
+          component: {
+            name: 'blankPage'
+          }
+        });
       },
       onError: () => {
         setAuthError(true);
