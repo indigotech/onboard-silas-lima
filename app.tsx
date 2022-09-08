@@ -43,6 +43,9 @@ const Section: React.FC<
   );
 };
 
+const emailValidator = new RegExp('[a-zA-Z0-9.]+@[a-zA-Z0-9]+[.][a-zA-Z]+([.][a-zA-Z]+)?');
+const passwordValidator = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{7,}');
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -55,23 +58,12 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
 
-  const emailValidator = new RegExp('[a-zA-Z0-9.]+@[a-zA-Z0-9]+[.][a-zA-Z]+([.][a-zA-Z]+)?');
-  const passwordValidator = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{7,}');
+  
 
-  const validateInput = () => {
-    if(!emailValidator.test(email)){
-      setEmailError(true);
-    }
-    else{
-      setEmailError(false);
-    }
-
-    if(!passwordValidator.test(password)){
-      setPasswordError(true)
-    }
-    else{
-      setPasswordError(false);
-    }
+  const handleSubmit = () => {
+    // Validating Email and Password
+    setEmailError(!emailValidator.test(email));
+    setPasswordError(!passwordValidator.test(password))
   }
 
   return (
@@ -114,7 +106,7 @@ const App = () => {
             onChangeText={(p) => setPassword(p)}
           />
           
-          <Button title='Entrar' onPress={validateInput} color="#841584"/>
+          <Button title='Entrar' onPress={handleSubmit} color="#841584"/>
         </View>
       </ScrollView>
     </SafeAreaView>
