@@ -1,10 +1,11 @@
 import {
-  Button,
+  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StatusBar,
   Text,
   TextInput,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -97,7 +98,16 @@ export const LoginPage = (props: NavigationComponentProps) => {
             onChangeText={(p) => setPassword(p)}
           />
           
-          <Button title={'Entrar'} onPress={handleSubmit} disabled={loading} color="#841584"/>
+          <TouchableOpacity 
+            onPress={handleSubmit}
+            disabled={loading}
+            style={{...Styles.button, backgroundColor: loading? "#FEB800": "#841584"}}
+          >
+            {loading && <ActivityIndicator color="#00002D"/>}
+            <Text style={{...Styles.sectionTitle, color: loading? "#AAAAAA": "#FFFFFF"}}>
+              Entrar
+            </Text>
+          </TouchableOpacity>
           {authError &&<Text style={Styles.errorMessage}>{error?.message}</Text>}
         </View>
       </ScrollView>
