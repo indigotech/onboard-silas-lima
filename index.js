@@ -3,11 +3,11 @@
  */
 
 import { Navigation } from "react-native-navigation";
-import App from './app.tsx';
-import BlankPage from './blank-page.tsx';
+import { LoginPage } from './pages/login-page.tsx';
+import { BlankPage } from './pages/blank-page.tsx';
 
-Navigation.registerComponent('loginScreen', () => App);
-Navigation.registerComponent('blankPage', () => BlankPage)
+Navigation.registerComponent('loginPage', () => LoginPage);
+Navigation.registerComponent('blankPage', () => BlankPage);
 
 Navigation.events().registerAppLaunchedListener(() => {
    Navigation.setRoot({
@@ -16,7 +16,7 @@ Navigation.events().registerAppLaunchedListener(() => {
          children: [
            {
              component: {
-               name: 'loginScreen'
+               name: 'loginPage'
              }
            }
          ]
