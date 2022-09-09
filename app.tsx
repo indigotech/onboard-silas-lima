@@ -1,17 +1,21 @@
-import React, {useState, type PropsWithChildren} from 'react';
 import {
   Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
-  StyleSheet,
   Text,
   TextInput,
   useColorScheme,
   View,
 } from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { Styles } from './styles';
+import { setValue } from './persistency';
+import { loginValidator } from './regex';
+import { client } from './services/apollo';
+import { useMutation } from '@apollo/client';
+import { loginMutationGQL } from './graphql/mutations';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import React, {useState, type PropsWithChildren} from 'react';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -20,10 +24,10 @@ const Section: React.FC<
 > = ({children, title}) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
-    <View style={styles.sectionContainer}>
+    <View style={Styles.sectionContainer}>
       <Text
         style={[
-          styles.sectionTitle,
+          Styles.sectionTitle,
           {
             color: isDarkMode ? Colors.white : Colors.black,
           },
@@ -32,7 +36,7 @@ const Section: React.FC<
       </Text>
       <Text
         style={[
-          styles.sectionDescription,
+          Styles.sectionDescription,
           {
             color: isDarkMode ? Colors.light : Colors.dark,
           },
@@ -43,27 +47,41 @@ const Section: React.FC<
   );
 };
 
-const emailValidator = new RegExp('[a-zA-Z0-9.]+@[a-zA-Z0-9]+[.][a-zA-Z]+([.][a-zA-Z]+)?');
-const passwordValidator = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{7,}');
-
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState('');
+
+  const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
+  const [authError, setAuthError] = useState(false);
   
-
+  const [loginMutation, {loading, error}] = useMutation(loginMutationGQL, 
+    {
+      client: client, 
+      onCompleted: (data) => {
+        setValue('@token', data.login.token);
+      },
+      onError: () => {
+        setAuthError(true);
+      }
+    });
+  
   const handleSubmit = () => {
-    // Validating Email and Password
-    setEmailError(!emailValidator.test(email));
-    setPasswordError(!passwordValidator.test(password))
+    const validation = loginValidator(email, password);
+
+    setEmailError(!validation.isValidEmail);
+    setPasswordError(!validation.isValidPassword);
+    setAuthError(false);
+
+    if (validation.isValidEmail && validation.isValidPassword){
+      loginMutation({variables: {input: { email: email, password: password}}});
+    }
   }
 
   return (
@@ -78,23 +96,19 @@ const App = () => {
           }}>
           <Section title="Bem-Vindo(a) à Taqtile!"/>
 
-          <Text style={styles.inputTitle}>
-            E-mail
-          </Text>
-          {emailError && <Text style={styles.errorMessage}>
+          <Text style={Styles.inputTitle}> E-mail </Text>
+          {emailError && <Text style={Styles.errorMessage}>
             Insira um endereço de e-mail válido!
           </Text>}
           <TextInput 
             value={email} 
             keyboardType='email-address'
-            style={styles.inputContainer} 
+            style={Styles.inputContainer} 
             onChangeText={(e) => setEmail(e)}
           />
 
-          <Text style={styles.inputTitle}>
-            Senha
-          </Text>
-          {passwordError && <Text style={styles.errorMessage}>
+          <Text style={Styles.inputTitle}> Senha </Text>
+          {passwordError && <Text style={Styles.errorMessage}>
             Insira uma senha válida!
             {'\n'}- Mínimo de 7 caracteres
             {'\n'}- Mínimo de 1 dígito e 1 letra
@@ -102,52 +116,16 @@ const App = () => {
           <TextInput
             value={password}
             secureTextEntry={true}
-            style={styles.inputContainer} 
+            style={Styles.inputContainer} 
             onChangeText={(p) => setPassword(p)}
           />
           
-          <Button title='Entrar' onPress={handleSubmit} color="#841584"/>
+          <Button title={'Entrar'} onPress={handleSubmit} disabled={loading} color="#841584"/>
+          {authError &&<Text style={Styles.errorMessage}>{error?.message}</Text>}
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  inputTitle: {
-    fontWeight: "400",
-    marginLeft: 15,
-  },
-  inputContainer: {
-    height: 60,
-    margin: 15,
-    marginBottom: 50,
-    padding: 10,
-    borderWidth: 2,
-    borderColor: "#AAAAAA",
-    borderRadius: 10,
-  },
-  errorMessage: {
-    marginLeft: 15,
-    color: 'red',
-  }
-});
-
 
 export default App;
