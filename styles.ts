@@ -30,6 +30,15 @@ export const Styles = StyleSheet.create({
       borderColor: "#AAAAAA",
       borderRadius: 10,
     },
+    button: {
+      height: 60,
+      margin: 15,
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      alignItems: "center",
+      borderRadius: 10,
+    },
     errorMessage: {
       marginLeft: 15,
       color: 'red',
