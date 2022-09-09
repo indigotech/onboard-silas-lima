@@ -2,7 +2,6 @@ import React from 'react';
 import {
   FlatList,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   Text,
   useColorScheme,
@@ -31,7 +30,7 @@ export const UsersPage = () => {
             data={Users}
             renderItem={({item}) => (
                 <Text style={Styles.userList}>
-                  Usuário: {item.username}{'\n'}
+                  Usuário: {item.name}{'\n'}
                   Email: {item.email}
                 </Text>
             )}

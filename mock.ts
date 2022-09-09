@@ -1,32 +1,32 @@
 export const Users = [
     {
         userId: 1,
-        username: "silas-lima",
+        name: "Silas Lima",
         email: "silas-lima@taqtile.com.br"
     },
     {
         userId: 2,
-        username: "gustavo-kamihara",
+        name: "Gustavo Kamihara",
         email: "gustavo-kamihara@taqtile.com.br"
     },
     {
         userId: 3,
-        username: "enzo-cardeal",
+        name: "Enzo Cardeal",
         email: "enzo-cardeal@taqtile.com.br"
     },
     {
         userId: 4,
-        username: "daniel-martins",
+        name: "Daniel Martins",
         email: "daniel-martins@taqtile.com.br"
     },
     {
         userId: 5,
-        username: "camila-lobianco",
+        name: "Camila Lobianco",
         email: "camila-lobianco@taqtile.com.br"
     },
     {
         userId: 6,
-        username: "paulo-sestini",
+        name: "Paulo Sestini",
         email: "paulo-sestini@taqtile.com.br"
     }
 ];
