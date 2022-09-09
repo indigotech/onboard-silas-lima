@@ -41,7 +41,7 @@ export const LoginPage = (props: NavigationComponentProps) => {
         setValue('@token', data.login.token);
         Navigation.push(props.componentId, {
           component: {
-            name: 'blankPage'
+            name: 'usersPage'
           }
         });
       },
