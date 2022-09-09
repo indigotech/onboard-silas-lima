@@ -8,46 +8,18 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import { Styles } from './styles';
-import { setValue } from './persistency';
-import { loginValidator } from './regex';
-import { client } from './services/apollo';
+import { Styles } from '../styles';
+import { setValue } from '../persistency';
+import { loginValidator } from '../regex';
+import { client } from '../services/apollo';
 import { useMutation } from '@apollo/client';
-import { loginMutationGQL } from './graphql/mutations';
+import { loginMutationGQL } from '../graphql/mutations';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import React, {useState, type PropsWithChildren} from 'react';
+import React, { useState } from 'react';
+import { Navigation, NavigationComponentProps } from 'react-native-navigation';
+import { Section } from '../section';
 
-const Section: React.FC<
-  PropsWithChildren<{
-    title: string;
-  }>
-> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={Styles.sectionContainer}>
-      <Text
-        style={[
-          Styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          Styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App = () => {
+export const LoginPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -66,6 +38,11 @@ const App = () => {
       client: client, 
       onCompleted: (data) => {
         setValue('@token', data.login.token);
+        Navigation.push(props.componentId, {
+          component: {
+            name: 'blankPage'
+          }
+        });
       },
       onError: () => {
         setAuthError(true);
@@ -127,5 +104,3 @@ const App = () => {
     </SafeAreaView>
   );
 };
-
-export default App;

@@ -2,8 +2,26 @@
  * @format
  */
 
-import {AppRegistry} from 'react-native';
-import App from './app.tsx';
-import {name as appName} from './app.json';
+import { Navigation } from "react-native-navigation";
+import { LoginPage } from './pages/login-page.tsx';
+import { BlankPage } from './pages/blank-page.tsx';
 
-AppRegistry.registerComponent(appName, () => App);
+Navigation.registerComponent('loginPage', () => LoginPage);
+Navigation.registerComponent('blankPage', () => BlankPage);
+
+Navigation.events().registerAppLaunchedListener(() => {
+   Navigation.setRoot({
+     root: {
+       stack: {
+         children: [
+           {
+             component: {
+               name: 'loginPage'
+             }
+           }
+         ]
+       }
+     }
+  });
+});
+

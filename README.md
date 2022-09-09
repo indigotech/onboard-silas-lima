@@ -12,6 +12,7 @@ Environment and Tools
 - Apollo 3.6.9
 - Async-storage 1.17.10
 - Graphql 16.6.0
+- React-native-navigation 7.29.0
 
 Steps to run and debug
 - Open the terminal on the root of the project and run the command
