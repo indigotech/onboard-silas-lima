@@ -4,10 +4,10 @@
 
 import { Navigation } from "react-native-navigation";
 import { LoginPage } from './pages/login-page.tsx';
-import { BlankPage } from './pages/blank-page.tsx';
+import { UsersPage } from './pages/users-page.tsx';
 
 Navigation.registerComponent('loginPage', () => LoginPage);
-Navigation.registerComponent('blankPage', () => BlankPage);
+Navigation.registerComponent('usersPage', () => UsersPage);
 
 Navigation.events().registerAppLaunchedListener(() => {
    Navigation.setRoot({

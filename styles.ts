@@ -42,5 +42,13 @@ export const Styles = StyleSheet.create({
     errorMessage: {
       marginLeft: 15,
       color: 'red',
-    }
+    },
+    userList: {
+      fontWeight: "500",
+      margin: 2,
+      padding: 7,
+      color: "#FFFFFF",
+      backgroundColor: "#000000",
+      borderRadius: 10,
+    },
 });
