@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   SafeAreaView,
   StatusBar,
@@ -20,9 +21,12 @@ export const UsersPage = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const {data, error} = useQuery(usersQueryGQL,
+  const [limit, setLimit] = useState(25);
+
+  const {data, loading, error} = useQuery(usersQueryGQL,
     {
-      client: client, 
+      client: client,
+      variables: {input: { offset: 0, limit: limit}},
       onError: () => {
         console.log(error);
       }
@@ -50,6 +54,9 @@ export const UsersPage = () => {
             data={data?.users.nodes}
             renderItem={({item}) => renderUser(item)}
             keyExtractor={(item) => item.id}
+            onEndReached={() => setLimit(limit + 25)}
+            onEndReachedThreshold={0.25}
+            ListFooterComponent={loading ? <ActivityIndicator/> : null}
           /> 
       </View>
     </SafeAreaView>
