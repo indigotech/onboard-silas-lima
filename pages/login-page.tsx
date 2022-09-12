@@ -48,7 +48,8 @@ export const LoginPage = (props: NavigationComponentProps) => {
       onError: () => {
         setAuthError(true);
       }
-    });
+    }
+  );
   
   const handleSubmit = () => {
     const validation = loginValidator(email, password);
