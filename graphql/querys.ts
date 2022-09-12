@@ -5,7 +5,8 @@ export const usersQueryGQL = gql`
     users {
       nodes {
         name,
-        email
+        email,
+        id
       }
     }
   }

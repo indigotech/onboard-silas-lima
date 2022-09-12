@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -13,7 +13,7 @@ import { Section } from '../section';
 import { Styles } from '../styles';
 import { usersQueryGQL } from '../graphql/querys';
 import { client } from '../services/apollo';
-import { useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 
 export const UsersPage = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,27 +21,18 @@ export const UsersPage = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  function UsersQuery() {
-    const { loading, error, data } = useQuery(usersQueryGQL, { client: client });
-  
-    if (loading) {
-      return <ActivityIndicator/>;
+  const [usersQuery, {data, error}] = useLazyQuery(usersQueryGQL,
+    {
+      client: client, 
+      onError: () => {
+        console.log(error);
+      }
     }
-    if (error) {
-      return <Text style={Styles.errorMessage}>`Erro! ${error.message}`</Text>;
-    }
-    return (
-      <FlatList 
-        data={data.users.nodes}
-        renderItem={({item}) => (
-            <Text style={Styles.userList}>
-              Usuário: {item.name}{'\n'}
-              Email: {item.email}
-            </Text>
-        )}
-      />
-    );
-  }
+  );
+
+  useEffect(() => {
+    usersQuery();
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -51,7 +42,16 @@ export const UsersPage = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title="Lista de Usuários"/>
-          <UsersQuery/>
+          <FlatList 
+            data={data?.users.nodes}
+            renderItem={({item}) => (
+              <Text style={Styles.userList}>
+                Usuário: {item.name}{'\n'}
+                Email: {item.email}
+              </Text>
+            )}
+            keyExtractor={(item) => item.id}
+          /> 
       </View>
     </SafeAreaView>
   );
