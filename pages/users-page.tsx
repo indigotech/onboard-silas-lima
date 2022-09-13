@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
-  ActivityIndicator,
   FlatList,
   SafeAreaView,
   StatusBar,
