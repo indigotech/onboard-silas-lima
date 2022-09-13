@@ -13,7 +13,8 @@ import { Section } from '../section';
 import { Styles } from '../styles';
 import { usersQueryGQL } from '../graphql/querys';
 import { client } from '../services/apollo';
-import { useQuery } from '@apollo/client';
+import { NetworkStatus, useQuery } from '@apollo/client';
+import { User } from '../interfaces/users';
 
 export const UsersPage = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,22 +22,32 @@ export const UsersPage = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const [limit, setLimit] = useState(25);
+  const [offset, setOffset] = useState(25);
 
-  const {data, loading, error} = useQuery(usersQueryGQL,
+  const {data, error, fetchMore, networkStatus} = useQuery(usersQueryGQL,
     {
       client: client,
-      variables: {input: { offset: 0, limit: limit}},
+      variables: {input: { offset: 0, limit: 25}},
       onError: () => {
         console.log(error);
-      }
+      },
+      notifyOnNetworkStatusChange: true
     }
   );
 
-  const renderUser = (item: any) => {
+  const fetchingMore = networkStatus === NetworkStatus.fetchMore;
+
+  const loadMoreUsers = () => {
+    if (!fetchingMore){
+      setOffset(offset+25);
+      fetchMore({variables: {input: { offset: offset, limit: 25}}});
+    }
+  }
+
+  const renderUser = (item: User) => {
     return (
       <Text style={Styles.userList}>
-        Usuário: {item.name}{'\n'}
+        Usuário {item.id}: {item.name}{'\n'}
         Email: {item.email}
       </Text>
     )
@@ -54,9 +65,9 @@ export const UsersPage = () => {
             data={data?.users.nodes}
             renderItem={({item}) => renderUser(item)}
             keyExtractor={(item) => item.id}
-            onEndReached={() => setLimit(limit + 25)}
+            onEndReached={loadMoreUsers}
             onEndReachedThreshold={0.25}
-            ListFooterComponent={loading ? <ActivityIndicator/> : null}
+            ListFooterComponent={fetchingMore ? <ActivityIndicator></ActivityIndicator> : null}
           /> 
       </View>
     </SafeAreaView>
