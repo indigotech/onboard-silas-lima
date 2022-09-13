@@ -19,7 +19,7 @@ Navigation.events().registerAppLaunchedListener(() => {
          children: [
            {
              component: {
-               name: 'addUserPage'
+               name: 'loginPage'
              }
            }
          ]
