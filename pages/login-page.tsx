@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { Styles } from '../styles';
-import { setValue } from '../persistency';
+import { setStorageValue } from '../persistency';
 import { loginValidator } from '../regex';
 import { client } from '../services/apollo';
 import { useMutation } from '@apollo/client';
@@ -38,7 +38,7 @@ export const LoginPage = (props: NavigationComponentProps) => {
     {
       client: client, 
       onCompleted: (data) => {
-        setValue('@token', data.login.token);
+        setStorageValue('@token', data.login.token);
         Navigation.push(props.componentId, {
           component: {
             name: 'usersPage'

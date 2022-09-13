@@ -13,7 +13,7 @@ import { Section } from '../section';
 import { Styles } from '../styles';
 import { usersQueryGQL } from '../graphql/querys';
 import { client } from '../services/apollo';
-import { useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 export const UsersPage = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -21,7 +21,7 @@ export const UsersPage = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const [usersQuery, {data, error}] = useLazyQuery(usersQueryGQL,
+  const {data, error} = useQuery(usersQueryGQL,
     {
       client: client, 
       onError: () => {
@@ -30,9 +30,14 @@ export const UsersPage = () => {
     }
   );
 
-  useEffect(() => {
-    usersQuery();
-  }, []);
+  const renderUser = (item: any) => {
+    return (
+      <Text style={Styles.userList}>
+        Usuário: {item.name}{'\n'}
+        Email: {item.email}
+      </Text>
+    )
+  }
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -44,12 +49,7 @@ export const UsersPage = () => {
           <Section title="Lista de Usuários"/>
           <FlatList 
             data={data?.users.nodes}
-            renderItem={({item}) => (
-              <Text style={Styles.userList}>
-                Usuário: {item.name}{'\n'}
-                Email: {item.email}
-              </Text>
-            )}
+            renderItem={({item}) => renderUser(item)}
             keyExtractor={(item) => item.id}
           /> 
       </View>
