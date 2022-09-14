@@ -9,11 +9,11 @@ import {
   View,
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { Section } from '../section';
 import { useQuery } from '@apollo/client';
 import { client } from '../services/apollo';
 import { userQueryGQL } from '../graphql/querys';
 import { Styles } from '../styles';
+import { Title } from '../styled-components';
 
 export const UserDetailPage = (props: any) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -38,8 +38,9 @@ export const UserDetailPage = (props: any) => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Dados do Usuário"/>
-          {loading &&  <ActivityIndicator />}
+          <Title>Dados do Usuário</Title>
+          
+          {loading && <ActivityIndicator />}
           <Text style={Styles.inputTitle}> Nome</Text>
           <Text style={Styles.userInfoContainer}>{data?.user.name}</Text>
 

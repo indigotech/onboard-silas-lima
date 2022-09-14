@@ -18,7 +18,7 @@ import { loginMutationGQL } from '../graphql/mutations';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React, { useState } from 'react';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
-import { Section } from '../section';
+import { Title } from '../styled-components';
 
 export const LoginPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -78,7 +78,7 @@ export const LoginPage = (props: NavigationComponentProps) => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Bem-Vindo(a) à Taqtile!"/>
+          <Title>Bem-Vindo(a) à Taqtile!</Title>
 
           <Text style={Styles.inputTitle}> E-mail </Text>
           {emailError && <Text style={Styles.errorMessage}>
