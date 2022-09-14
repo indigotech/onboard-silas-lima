@@ -11,7 +11,6 @@ Navigation.registerComponent('loginPage', () => LoginPage);
 Navigation.registerComponent('usersPage', () => UsersPage);
 Navigation.registerComponent('addUserPage', () => AddUserPage);
 
-
 Navigation.events().registerAppLaunchedListener(() => {
    Navigation.setRoot({
      root: {
