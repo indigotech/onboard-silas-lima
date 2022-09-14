@@ -1,5 +1,9 @@
 import { useMutation } from '@apollo/client';
+<<<<<<< HEAD
 import React, { useState } from 'react';
+=======
+import React, { useEffect, useState } from 'react';
+>>>>>>> 5eeecec (integrating createuser mutation)
 import {
   ActivityIndicator,
   Alert,
@@ -16,8 +20,13 @@ import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { createUserMutationGQL } from '../graphql/mutations';
 import { signinValidator } from '../regex';
+<<<<<<< HEAD
 import { client } from '../services/apollo';
 import { Title } from '../styled-components';
+=======
+import { Section } from '../section';
+import { client } from '../services/apollo';
+>>>>>>> 5eeecec (integrating createuser mutation)
 import { Styles } from '../styles';
 import { UserRole } from '../types/UserRole';
 
