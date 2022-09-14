@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ActivityIndicator,
+  Alert,
   SafeAreaView,
   StatusBar,
   Text,
@@ -21,12 +22,12 @@ export const UserDetailPage = (props: any) => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const {data, loading, error} = useQuery(userQueryGQL,
+  const {data, loading} = useQuery(userQueryGQL,
     {
       client: client,
       variables: {input: props.id},
-      onError: () => {
-        console.log(error);
+      onError: (e) => {
+        Alert.alert(e.name, e.message);
       },
     }
   );
