@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   StatusBar,
   Text,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -15,12 +16,21 @@ import { usersQueryGQL } from '../graphql/querys';
 import { client } from '../services/apollo';
 import { NetworkStatus, useQuery } from '@apollo/client';
 import { User } from '../interfaces/users';
+import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 
-export const UsersPage = () => {
+export const UsersPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const redirectAddUserPage = () => {
+    Navigation.push(props.componentId, {
+      component: {
+        name: 'addUserPage'
+      }
+    });
+  }
 
   const [offset, setOffset] = useState(25);
 
@@ -61,6 +71,14 @@ export const UsersPage = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title="Lista de Usuários"/>
+          <TouchableOpacity 
+            onPress={redirectAddUserPage}
+            style={{...Styles.button, backgroundColor: "#841584"}}
+          >
+            <Text style={{...Styles.sectionTitle, color: "white"}}>
+              Adicionar Novo Usuário
+            </Text>
+          </TouchableOpacity>
           <FlatList 
             data={data?.users.nodes}
             renderItem={({item}) => renderUser(item)}

@@ -140,11 +140,10 @@ export const AddUserPage = () => {
           
             <TouchableOpacity 
               onPress={handleSubmit}
-              style={{...Styles.button,
-              backgroundColor: "black"}}
+              style={{...Styles.button, backgroundColor: "#841584"}}
             >
               <Text style={{...Styles.sectionTitle, color: "white"}}>
-                Entrar
+                Cadastrar
               </Text>
             </TouchableOpacity>
         </View>
