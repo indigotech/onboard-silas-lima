@@ -55,7 +55,14 @@ export const UsersPage = (props: NavigationComponentProps) => {
   }
 
   const listUserDetails = (id: string) => {
-    console.log(id);
+    Navigation.push(props.componentId, {
+      component: {
+        name: 'userDetailPage',
+        passProps: {
+          id: id
+        }
+      }
+    });
   }
 
   const renderUserList = (item: User) => {
@@ -71,8 +78,6 @@ export const UsersPage = (props: NavigationComponentProps) => {
       </TouchableOpacity>
     )
   }
-
-  
 
   return (
     <SafeAreaView style={backgroundStyle}>

@@ -18,16 +18,8 @@ export const Styles = StyleSheet.create({
       fontWeight: "400",
       marginLeft: 15,
     },
-    loginInputContainer: {
-      height: 60,
-      margin: 15,
-      padding: 10,
-      borderWidth: 2,
-      borderColor: "#AAAAAA",
-      borderRadius: 10,
-    },
-    signinInputContainer: {
-      height: 35,
+    userInfoContainer: {
+      height: 40,
       marginHorizontal: 15,
       marginVertical: 10,
       padding: 10,
