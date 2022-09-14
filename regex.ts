@@ -31,7 +31,7 @@ export const signinValidator = (
 
   const isValidName = nameValidator.test(name);
   const isValidEmail = emailValidator.test(email);
-  const isValidPhone = phoneValidator.test(phone) && Number(phone) > 0;
+  const isValidPhone = phoneValidator.test(phone);
   const isValidBirthDate = birthDateValidator.test(birthDate) && birth > minBirthDate && birth < today;
   const isValidPassword = passwordValidator.test(password);
   const isValidRole = role === 'admin' || role === 'user';
