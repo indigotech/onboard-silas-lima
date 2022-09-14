@@ -59,13 +59,16 @@ export const Styles = StyleSheet.create({
       marginLeft: 15,
       color: 'red',
     },
-    userList: {
+    userListSource: {
       fontWeight: "500",
-      marginHorizontal: 15,
-      marginVertical: 2,
       paddingHorizontal: 10,
       paddingVertical: 5,
       color: "white",
-      backgroundColor: "black",
     },
+    userList: {
+      marginHorizontal: 15,
+      marginVertical: 2,
+      borderRadius: 10,
+      backgroundColor: "black",
+    }
 });
