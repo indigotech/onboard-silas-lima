@@ -40,7 +40,7 @@ export const UserDetailPage = (props: any) => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title="Dados do Usuário"/>
-          {loading &&  <ActivityIndicator></ActivityIndicator>}
+          {loading &&  <ActivityIndicator />}
           <Text style={Styles.inputTitle}> Nome</Text>
           <Text style={Styles.userInfoContainer}>{data?.user.name}</Text>
 
