@@ -2,7 +2,6 @@ import { Fragment } from 'react';
 import React from 'react';
 import styled from 'styled-components/native';
 import { ActivityIndicator } from 'react-native';
-import { StyledOption } from './interfaces/styled-components';
 
 export const Title = styled.Text`
   color: #000000;
@@ -26,7 +25,7 @@ const FormInput = styled.TextInput`
   border-radius: 8px;
   border-color: #777777;
 
-  height: 30px;
+  height: 40px;
   padding-left: 10px;
   margin-horizontal: 20px;
 `;
