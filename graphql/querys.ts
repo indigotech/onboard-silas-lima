@@ -1,12 +1,12 @@
 import { gql } from "@apollo/client";
 
 export const usersQueryGQL = gql`
-  query {
-    users {
+  query($input: PageInputType) {
+    users(pageInfo: $input) {
       nodes {
+        id,
         name,
-        email,
-        id
+        email
       }
     }
   }
