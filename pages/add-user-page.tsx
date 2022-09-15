@@ -1,23 +1,12 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { Alert, SafeAreaView, ScrollView, StatusBar, useColorScheme, View } from 'react-native';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { createUserMutationGQL } from '../graphql/mutations';
 import { signinValidator } from '../regex';
 import { client } from '../services/apollo';
-import { ButtonContainer, ButtonLabel, FormError, FormField, FormLabel, Title } from '../styled-components';
-import { Styles } from '../styles';
+import { ActionButton, ErrorMessage, FormField, FormLabel, Title, OptionSelector } from '../styled-components';
 import { UserRole } from '../types/UserRole';
 
 export const AddUserPage = (props: NavigationComponentProps) => {
@@ -80,7 +69,7 @@ export const AddUserPage = (props: NavigationComponentProps) => {
             phone: phone,
             birthDate: birthDate,
             password: password,
-            role: role,
+            role: role === 'user' ? 'user' : 'admin',
           },
         },
       });
@@ -91,65 +80,52 @@ export const AddUserPage = (props: NavigationComponentProps) => {
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView contentInsetAdjustmentBehavior='automatic' style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}
-        >
+        <View style={{ backgroundColor: isDarkMode ? Colors.black : Colors.white }}>
           <Title>Cadastrar Usuário</Title>
 
-          <FormLabel> Nome </FormLabel>
-          <FormField value={name} onChangeText={(n) => setName(n)} />
-          {nameError && <FormError> Insira um nome válido! </FormError>}
+          <FormField
+            label='Nome'
+            validationError={nameError}
+            validationMessage='Insira um nome válido!'
+            onChangeText={(n) => setName(n)}
+          />
 
-          <FormLabel> E-mail </FormLabel>
-          <FormField value={email} keyboardType='email-address' onChangeText={(e) => setEmail(e)} />
-          {emailError && <FormError> Insira um endereço de e-mail válido! </FormError>}
+          <FormField
+            label='E-mail'
+            validationError={emailError}
+            validationMessage='Insira um endereço de e-mail válido!'
+            onChangeText={(e) => setEmail(e)}
+          />
 
-          <FormLabel> Telefone </FormLabel>
-          <FormField value={phone} onChangeText={(p) => setPhone(p)} />
-          {phoneError && <FormError> Insira um número de telefone válido! </FormError>}
+          <FormField
+            label='Telefone'
+            validationError={phoneError}
+            validationMessage='Insira um número de telefone válido!'
+            onChangeText={(p) => setPhone(p)}
+          />
 
-          <FormLabel> Data de Nascimento </FormLabel>
-          <FormField placeholder='FORMATO YYYY-MM-DD' value={birthDate} onChangeText={(bd) => setBirthDate(bd)} />
-          {birthDateError && <FormError> Insira uma data válida (formato: YYYY-MM-DD)! </FormError>}
+          <FormField
+            label='Data de Nascimento'
+            placeholder='FORMATO YYYY-MM-DD'
+            validationError={birthDateError}
+            validationMessage='Insira uma data válida (formato: YYYY-MM-DD)!'
+            onChangeText={(bd) => setBirthDate(bd)}
+          />
 
-          <FormLabel> Senha </FormLabel>
-          <FormField value={password} secureTextEntry={true} onChangeText={(p) => setPassword(p)} />
-          {passwordError && (
-            <FormError>
-              Insira uma senha válida!
-              {'\n'}- Mínimo de 7 caracteres
-              {'\n'}- Mínimo de 1 dígito e 1 letra
-            </FormError>
-          )}
+          <FormField
+            label='Senha'
+            validationError={passwordError}
+            validationMessage='Insira uma senha válida!'
+            onChangeText={(p) => setPassword(p)}
+          />
 
           <FormLabel> Cargo </FormLabel>
-          <TouchableOpacity
-            onPress={() => setRole('admin')}
-            style={{
-              ...Styles.roleSelector,
-              backgroundColor: role == 'admin' ? 'black' : 'white',
-            }}
-          >
-            <Text style={{ color: role == 'admin' ? 'white' : 'black' }}>Administrador</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setRole('user')}
-            style={{
-              ...Styles.roleSelector,
-              backgroundColor: role == 'user' ? 'black' : 'white',
-            }}
-          >
-            <Text style={{ color: role == 'user' ? 'white' : 'black' }}>Usuário</Text>
-          </TouchableOpacity>
-          {roleError && <FormError> Selecione um Cargo! </FormError>}
+          <OptionSelector option={'Administrador'} selectedOption={role === 'admin'} onPress={() => setRole('admin')} />
+          <OptionSelector option={'Usuário'} selectedOption={role === 'user'} onPress={() => setRole('user')} />
+          {roleError && <ErrorMessage> Selecione um Cargo! </ErrorMessage>}
 
-          <ButtonContainer onPress={handleSubmit}>
-            {loading && <ActivityIndicator color='#00002D' />}
-            <ButtonLabel> Cadastrar </ButtonLabel>
-          </ButtonContainer>
-          {createUserError && <Text style={Styles.errorMessage}>{error?.message}</Text>}
+          <ActionButton label='Cadastrar' loading={loading} handlePress={handleSubmit} />
+          {createUserError && <ErrorMessage>{error?.message}</ErrorMessage>}
         </View>
       </ScrollView>
     </SafeAreaView>

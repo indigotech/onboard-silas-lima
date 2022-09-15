@@ -1,15 +1,10 @@
 import {
-  ActivityIndicator,
   SafeAreaView,
   ScrollView,
   StatusBar,
-  Text,
-  TextInput,
-  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
-import { Styles } from '../styles';
 import { setStorageValue } from '../persistency';
 import { loginValidator } from '../regex';
 import { client } from '../services/apollo';
@@ -18,7 +13,7 @@ import { loginMutationGQL } from '../graphql/mutations';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React, { useState } from 'react';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
-import { ButtonContainer, ButtonLabel, FormError, FormField, FormLabel, Title } from '../styled-components';
+import { ActionButton, ErrorMessage, FormField, Title } from '../styled-components';
 
 export const LoginPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -74,37 +69,30 @@ export const LoginPage = (props: NavigationComponentProps) => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+        <View style={{ backgroundColor: isDarkMode ? Colors.black : Colors.white }}>
+
           <Title>Bem-Vindo(a) à Taqtile!</Title>
 
-          <FormLabel> E-mail </FormLabel>
           <FormField 
-            value={email} 
-            keyboardType='email-address'
+            label='E-mail'
+            validationError= {emailError}
+            validationMessage='Insira um endereço de e-mail válido!'
             onChangeText={(e) => setEmail(e)}
           />
-          {emailError && <FormError> Insira um endereço de e-mail válido! </FormError>}
 
-          <FormLabel> Senha </FormLabel>
-          <FormField
-            value={password}
-            secureTextEntry={true}
+          <FormField 
+            label='Senha'
+            validationError= {passwordError}
+            validationMessage= "Insira uma senha válida!"
             onChangeText={(p) => setPassword(p)}
           />
-          {passwordError && <FormError>
-            Insira uma senha válida!
-            {'\n'}- Mínimo de 7 caracteres
-            {'\n'}- Mínimo de 1 dígito e 1 letra
-          </FormError>}
-          
-          <ButtonContainer onPress={handleSubmit} disabled={loading}>
-            {loading && <ActivityIndicator color="#00002D"/>}
-            <ButtonLabel> Entrar </ButtonLabel>
-          </ButtonContainer>
-          {authError &&<Text style={Styles.errorMessage}>{error?.message}</Text>}
+
+          <ActionButton 
+            label='Entrar'
+            loading={loading}
+            handlePress={handleSubmit}
+          />
+          {authError && <ErrorMessage>{error?.message}</ErrorMessage>}
         </View>
       </ScrollView>
     </SafeAreaView>
