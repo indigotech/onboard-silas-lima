@@ -119,7 +119,7 @@ export const AddUserPage = (props: NavigationComponentProps) => {
             onChangeText={(p) => setPassword(p)}
           />
 
-          <FormLabel> Cargo </FormLabel>
+          <FormLabel invalidInput={roleError}> Cargo </FormLabel>
           <OptionSelector option={'Administrador'} selectedOption={role === 'admin'} onPress={() => setRole('admin')} />
           <OptionSelector option={'Usuário'} selectedOption={role === 'user'} onPress={() => setRole('user')} />
           {roleError && <ErrorMessage> Selecione um Cargo! </ErrorMessage>}

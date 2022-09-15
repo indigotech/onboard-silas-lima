@@ -10,18 +10,18 @@ export const Title = styled.Text`
   margin: 20px;
 `;
 
-export const FormLabel = styled.Text`
-  color: #777777;
+export const FormLabel = styled.Text<{ invalidInput: boolean }>`
+  color: ${(props) => (props.invalidInput ? '#C11A26' : '#777777')};
   font-size: 12px;
   font-weight: normal;
   margin-vertical: 12px;
   margin-horizontal: 20px;
 `;
 
-const FormInput = styled.TextInput`
+const FormInput = styled.TextInput<{ invalidInput: boolean }>`
   border: 1px;
   border-radius: 8px;
-  border-color: #777777;
+  border-color: ${(props) => (props.invalidInput ? '#C11A26' : '#777777')};
   height: 40px;
   padding-left: 10px;
   margin-horizontal: 20px;
@@ -83,10 +83,11 @@ export const FormField = (props: {
 }) => {
   return (
     <Fragment>
-      <FormLabel> {props.label} </FormLabel>
+      <FormLabel invalidInput={props.validationError}> {props.label} </FormLabel>
       <FormInput
         placeholder={props.placeholder}
         onChangeText={props.onChangeText}
+        invalidInput={props.validationError}
         secureTextEntry={props.label == 'Senha'}
       />
       {props.validationError && <ErrorMessage> {props.validationMessage} </ErrorMessage>}
