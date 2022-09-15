@@ -7,7 +7,6 @@ export const Title = styled.Text`
   color: #000000;
   font-size: 24px;
   font-weight: bold;
-
   margin: 20px;
 `;
 
@@ -15,7 +14,6 @@ export const FormLabel = styled.Text`
   color: #777777;
   font-size: 12px;
   font-weight: normal;
-
   margin-vertical: 12px;
   margin-horizontal: 20px;
 `;
@@ -24,7 +22,6 @@ const FormInput = styled.TextInput`
   border: 1px;
   border-radius: 8px;
   border-color: #777777;
-
   height: 40px;
   padding-left: 10px;
   margin-horizontal: 20px;
@@ -36,10 +33,8 @@ const ButtonContainer = styled.TouchableOpacity`
   align-items: center;
   flex-direction: row;
   justify-content: space-evenly;
-
   margin-top: 12px;
   margin-horizontal: 20px;
-
   border-radius: 8px;
   background-color: ${(props) => (props.disabled ? '#FEB800' : '#841584')};
 `;
