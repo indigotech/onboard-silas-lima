@@ -18,7 +18,7 @@ import { loginMutationGQL } from '../graphql/mutations';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React, { useState } from 'react';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
-import { Title } from '../styled-components';
+import { ButtonContainer, ButtonLabel, FormError, FormField, FormLabel, Title } from '../styled-components';
 
 export const LoginPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -80,40 +80,30 @@ export const LoginPage = (props: NavigationComponentProps) => {
           }}>
           <Title>Bem-Vindo(a) à Taqtile!</Title>
 
-          <Text style={Styles.inputTitle}> E-mail </Text>
-          {emailError && <Text style={Styles.errorMessage}>
-            Insira um endereço de e-mail válido!
-          </Text>}
-          <TextInput 
+          <FormLabel> E-mail </FormLabel>
+          <FormField 
             value={email} 
             keyboardType='email-address'
-            style={Styles.userInfoContainer} 
             onChangeText={(e) => setEmail(e)}
           />
+          {emailError && <FormError> Insira um endereço de e-mail válido! </FormError>}
 
-          <Text style={Styles.inputTitle}> Senha </Text>
-          {passwordError && <Text style={Styles.errorMessage}>
+          <FormLabel> Senha </FormLabel>
+          <FormField
+            value={password}
+            secureTextEntry={true}
+            onChangeText={(p) => setPassword(p)}
+          />
+          {passwordError && <FormError>
             Insira uma senha válida!
             {'\n'}- Mínimo de 7 caracteres
             {'\n'}- Mínimo de 1 dígito e 1 letra
-          </Text>}
-          <TextInput
-            value={password}
-            secureTextEntry={true}
-            style={Styles.userInfoContainer} 
-            onChangeText={(p) => setPassword(p)}
-          />
+          </FormError>}
           
-          <TouchableOpacity 
-            onPress={handleSubmit}
-            disabled={loading}
-            style={{...Styles.button, backgroundColor: loading? "#FEB800": "#841584"}}
-          >
+          <ButtonContainer onPress={handleSubmit} disabled={loading}>
             {loading && <ActivityIndicator color="#00002D"/>}
-            <Text style={{...Styles.sectionTitle, color: loading? "#AAAAAA": "#FFFFFF"}}>
-              Entrar
-            </Text>
-          </TouchableOpacity>
+            <ButtonLabel> Entrar </ButtonLabel>
+          </ButtonContainer>
           {authError &&<Text style={Styles.errorMessage}>{error?.message}</Text>}
         </View>
       </ScrollView>

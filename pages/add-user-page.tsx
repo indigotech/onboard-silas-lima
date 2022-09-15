@@ -7,7 +7,6 @@ import {
   ScrollView,
   StatusBar,
   Text,
-  TextInput,
   TouchableOpacity,
   useColorScheme,
   View,
@@ -17,7 +16,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { createUserMutationGQL } from '../graphql/mutations';
 import { signinValidator } from '../regex';
 import { client } from '../services/apollo';
-import { Title } from '../styled-components';
+import { ButtonContainer, ButtonLabel, FormError, FormField, FormLabel, Title } from '../styled-components';
 import { Styles } from '../styles';
 import { UserRole } from '../types/UserRole';
 
@@ -98,49 +97,34 @@ export const AddUserPage = (props: NavigationComponentProps) => {
           }}
         >
           <Title>Cadastrar Usuário</Title>
-          <Text style={Styles.inputTitle}> Nome </Text>
-          {nameError && <Text style={Styles.errorMessage}>Insira um nome válido!</Text>}
-          <TextInput value={name} style={Styles.userInfoContainer} onChangeText={(n) => setName(n)} />
 
-          <Text style={Styles.inputTitle}> E-mail </Text>
-          {emailError && <Text style={Styles.errorMessage}>Insira um endereço de e-mail válido!</Text>}
-          <TextInput
-            value={email}
-            keyboardType='email-address'
-            style={Styles.userInfoContainer}
-            onChangeText={(e) => setEmail(e)}
-          />
+          <FormLabel> Nome </FormLabel>
+          <FormField value={name} onChangeText={(n) => setName(n)} />
+          {nameError && <FormError> Insira um nome válido! </FormError>}
 
-          <Text style={Styles.inputTitle}> Telefone </Text>
-          {phoneError && <Text style={Styles.errorMessage}>Insira um número de telefone válido!</Text>}
-          <TextInput value={phone} style={Styles.userInfoContainer} onChangeText={(p) => setPhone(p)} />
+          <FormLabel> E-mail </FormLabel>
+          <FormField value={email} keyboardType='email-address' onChangeText={(e) => setEmail(e)} />
+          {emailError && <FormError> Insira um endereço de e-mail válido! </FormError>}
 
-          <Text style={Styles.inputTitle}> Data de Nascimento </Text>
-          {birthDateError && <Text style={Styles.errorMessage}>Insira uma data válida (formato: YYYY-MM-DD)!</Text>}
-          <TextInput
-            placeholder='FORMATO YYYY-MM-DD'
-            value={birthDate}
-            style={Styles.userInfoContainer}
-            onChangeText={(bd) => setBirthDate(bd)}
-          />
+          <FormLabel> Telefone </FormLabel>
+          <FormField value={phone} onChangeText={(p) => setPhone(p)} />
+          {phoneError && <FormError> Insira um número de telefone válido! </FormError>}
 
-          <Text style={Styles.inputTitle}> Senha </Text>
+          <FormLabel> Data de Nascimento </FormLabel>
+          <FormField placeholder='FORMATO YYYY-MM-DD' value={birthDate} onChangeText={(bd) => setBirthDate(bd)} />
+          {birthDateError && <FormError> Insira uma data válida (formato: YYYY-MM-DD)! </FormError>}
+
+          <FormLabel> Senha </FormLabel>
+          <FormField value={password} secureTextEntry={true} onChangeText={(p) => setPassword(p)} />
           {passwordError && (
-            <Text style={Styles.errorMessage}>
+            <FormError>
               Insira uma senha válida!
               {'\n'}- Mínimo de 7 caracteres
               {'\n'}- Mínimo de 1 dígito e 1 letra
-            </Text>
+            </FormError>
           )}
-          <TextInput
-            value={password}
-            secureTextEntry={true}
-            style={Styles.userInfoContainer}
-            onChangeText={(p) => setPassword(p)}
-          />
 
-          <Text style={Styles.inputTitle}> Cargo </Text>
-          {roleError && <Text style={Styles.errorMessage}>Selecione um Cargo!</Text>}
+          <FormLabel> Cargo </FormLabel>
           <TouchableOpacity
             onPress={() => setRole('admin')}
             style={{
@@ -159,14 +143,12 @@ export const AddUserPage = (props: NavigationComponentProps) => {
           >
             <Text style={{ color: role == 'user' ? 'white' : 'black' }}>Usuário</Text>
           </TouchableOpacity>
+          {roleError && <FormError> Selecione um Cargo! </FormError>}
 
-          <TouchableOpacity
-            onPress={handleSubmit}
-            style={{ ...Styles.button, backgroundColor: loading ? '#FEB800' : '#841584' }}
-          >
+          <ButtonContainer onPress={handleSubmit}>
             {loading && <ActivityIndicator color='#00002D' />}
-            <Text style={{ ...Styles.sectionTitle, color: loading ? '#AAAAAA' : '#FFFFFF' }}>Cadastrar</Text>
-          </TouchableOpacity>
+            <ButtonLabel> Cadastrar </ButtonLabel>
+          </ButtonContainer>
           {createUserError && <Text style={Styles.errorMessage}>{error?.message}</Text>}
         </View>
       </ScrollView>
