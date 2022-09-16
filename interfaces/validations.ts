@@ -6,7 +6,6 @@ export interface SingleValidation {
 export interface LoginValidation {
   email: SingleValidation;
   password: SingleValidation;
-  isValidInput: boolean;
 }
     
 export interface SignUpValidation {
@@ -16,5 +15,4 @@ export interface SignUpValidation {
   birthDate: SingleValidation;
   password: SingleValidation;
   role: SingleValidation;
-  isValidInput: boolean;
 }

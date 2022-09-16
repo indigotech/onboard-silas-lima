@@ -1,21 +1,4 @@
-import { UserRole } from './types/UserRole';
-
-export type SingleValidation = { isValid: boolean; errorMessage: string };
-
-export type LoginValidation = {
-  email: SingleValidation;
-  password: SingleValidation;
-  isValidInput: boolean;
-};
-export type SignUpValidation = {
-  name: SingleValidation;
-  email: SingleValidation;
-  phone: SingleValidation;
-  birthDate: SingleValidation;
-  password: SingleValidation;
-  role: SingleValidation;
-  isValidInput: boolean;
-};
+import { UserRole } from './types/UserRole'; 
 
 const emailValidator = new RegExp('[a-zA-Z0-9.]+@[a-zA-Z0-9]+[.][a-zA-Z]+([.][a-zA-Z]+)?');
 const passwordValidator = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{7,}');
@@ -84,6 +67,5 @@ export const validateSignUp = (
       isValid: isValidRole,
       errorMessage: isValidRole ? '' : 'Selecione um Cargo!',
     },
-    isValidInput: isValidName && isValidEmail && isValidPhone && isValidBirthDate && isValidPassword && isValidRole,
   };
 };
