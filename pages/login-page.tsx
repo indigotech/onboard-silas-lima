@@ -2,18 +2,17 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  useColorScheme,
-  View,
+  useColorScheme
 } from 'react-native';
 import { setStorageValue } from '../persistency';
-import { loginValidator } from '../regex';
+import { LoginValidation, validateLogin } from '../validator';
 import { client } from '../services/apollo';
 import { useMutation } from '@apollo/client';
 import { loginMutationGQL } from '../graphql/mutations';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React, { useState } from 'react';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
-import { ActionButton, ErrorMessage, FormField, Title } from '../styled-components';
+import { ActionButton, ErrorMessage, FormField, Title, View } from '../styled-components';
 
 export const LoginPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -24,8 +23,17 @@ export const LoginPage = (props: NavigationComponentProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
+  const [validation, setValidation] = useState<LoginValidation>({
+    email: {
+        isValid : true,
+        errorMessage: ""
+    },
+    password: {
+        isValid: true,
+        errorMessage: ""
+    },
+    isValidInput: true
+  });
 
   const [authError, setAuthError] = useState(false);
   
@@ -47,13 +55,11 @@ export const LoginPage = (props: NavigationComponentProps) => {
   );
   
   const handleSubmit = () => {
-    const validation = loginValidator(email, password);
-
-    setEmailError(!validation.isValidEmail);
-    setPasswordError(!validation.isValidPassword);
+    const loginValidation = validateLogin(email, password)
+    setValidation(loginValidation);
     setAuthError(false);
 
-    if (validation.isValidInput){
+    if (loginValidation.isValidInput){
       loginMutation({variables: {
         input: { 
           email: email, 
@@ -69,21 +75,19 @@ export const LoginPage = (props: NavigationComponentProps) => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <View style={{ backgroundColor: isDarkMode ? Colors.black : Colors.white }}>
+        <View isDarkMode={ isDarkMode }>
 
           <Title>Bem-Vindo(a) à Taqtile!</Title>
 
           <FormField 
             label='E-mail'
-            validationError= {emailError}
-            validationMessage='Insira um endereço de e-mail válido!'
+            validation={validation.email}
             onChangeText={(e) => setEmail(e)}
           />
 
           <FormField 
             label='Senha'
-            validationError= {passwordError}
-            validationMessage= "Insira uma senha válida!"
+            validation={validation.password}
             onChangeText={(p) => setPassword(p)}
           />
 

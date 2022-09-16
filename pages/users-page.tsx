@@ -6,8 +6,7 @@ import {
   StatusBar,
   Text,
   TouchableOpacity,
-  useColorScheme,
-  View,
+  useColorScheme
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Styles } from '../styles';
@@ -16,7 +15,7 @@ import { client } from '../services/apollo';
 import { NetworkStatus, useQuery } from '@apollo/client';
 import { User } from '../interfaces/users';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
-import { Title } from '../styled-components';
+import { Title, View } from '../styled-components';
 
 export const UsersPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -82,10 +81,7 @@ export const UsersPage = (props: NavigationComponentProps) => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+      <View isDarkMode={ isDarkMode }>
           <Title>Lista de Usuários</Title>
 
           <TouchableOpacity 

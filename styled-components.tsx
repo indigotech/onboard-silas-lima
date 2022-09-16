@@ -2,6 +2,11 @@ import { Fragment } from 'react';
 import React from 'react';
 import styled from 'styled-components/native';
 import { ActivityIndicator } from 'react-native';
+import { SingleValidation } from './validator';
+
+export const View = styled.View<{ isDarkMode: boolean }>`
+  background-color: ${(props) => (props.isDarkMode ? '#000000' : '#FFFFFF')};
+`;
 
 export const Title = styled.Text`
   color: #000000;
@@ -10,18 +15,18 @@ export const Title = styled.Text`
   margin: 20px;
 `;
 
-export const FormLabel = styled.Text<{ invalidInput: boolean }>`
-  color: ${(props) => (props.invalidInput ? '#C11A26' : '#777777')};
+export const FormLabel = styled.Text<{ isValidInput: boolean }>`
+  color: ${(props) => (props.isValidInput ? '#777777' : '#C11A26')};
   font-size: 12px;
   font-weight: normal;
   margin-vertical: 12px;
   margin-horizontal: 20px;
 `;
 
-const FormInput = styled.TextInput<{ invalidInput: boolean }>`
+const FormInput = styled.TextInput<{ isValidInput: boolean }>`
   border: 1px;
   border-radius: 8px;
-  border-color: ${(props) => (props.invalidInput ? '#C11A26' : '#777777')};
+  border-color: ${(props) => (props.isValidInput ? '#777777' : '#C11A26')};
   height: 40px;
   padding-left: 10px;
   margin-horizontal: 20px;
@@ -77,20 +82,19 @@ export const ErrorMessage = styled.Text`
 export const FormField = (props: {
   label: string;
   placeholder?: string;
-  validationError: boolean;
-  validationMessage: string;
+  validation: SingleValidation;
   onChangeText: (value: string) => void;
 }) => {
   return (
     <Fragment>
-      <FormLabel invalidInput={props.validationError}> {props.label} </FormLabel>
+      <FormLabel isValidInput={props.validation.isValid}> {props.label} </FormLabel>
       <FormInput
         placeholder={props.placeholder}
         onChangeText={props.onChangeText}
-        invalidInput={props.validationError}
+        isValidInput={props.validation.isValid}
         secureTextEntry={props.label == 'Senha'}
       />
-      {props.validationError && <ErrorMessage> {props.validationMessage} </ErrorMessage>}
+      {!props.validation.isValid && <ErrorMessage> {props.validation.errorMessage} </ErrorMessage>}
     </Fragment>
   );
 };
