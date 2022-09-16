@@ -15,7 +15,7 @@ import { userQueryGQL } from '../graphql/querys';
 import { Styles } from '../styles';
 import { Title } from '../styled-components';
 
-export const UserDetailPage = (props: any) => {
+export const UserDetailPage = (props: {id: string}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
