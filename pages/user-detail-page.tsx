@@ -54,28 +54,7 @@ export const UserDetailPage = (props: any) => {
           <Text style={Styles.userInfoContainer}>{data?.user.birthDate}</Text>
           
           <Text style={Styles.inputTitle}> Cargo </Text>
-          <TouchableOpacity 
-            disabled = {true}
-            style={{
-              ...Styles.roleSelector, 
-              backgroundColor: data?.user.role == "admin" ? "black": "white"
-            }}
-          >
-            <Text style={{color: data?.user.role == "admin" ? "white": "black"}}>
-              Administrador
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            disabled = {true}
-            style={{
-              ...Styles.roleSelector, 
-              backgroundColor: data?.user.role == "user" ? "black": "white"
-            }}
-          >
-            <Text style={{color: data?.user.role == "user" ? "white": "black"}}>
-              Usuário
-            </Text>
-          </TouchableOpacity>
+          <Text style={Styles.userInfoContainer}>{(data?.user.role === 'admin' ? 'Administrador' : 'Usuário')}</Text>
       </View>
     </SafeAreaView>
   );
