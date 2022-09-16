@@ -27,7 +27,7 @@ export const LoginPage = (props: NavigationComponentProps) => {
     password: {
       isValid: true,
       errorMessage: '',
-    }
+    },
   });
 
   const [authError, setAuthError] = useState(false);
@@ -49,7 +49,7 @@ export const LoginPage = (props: NavigationComponentProps) => {
 
   const handleSubmit = () => {
     const loginValidation = validateLogin(email, password);
-    const isValidInput = Object.values(loginValidation).every((input) => input.isValid);
+    const isValidInput = Object.values(loginValidation).every((isValid) => isValid);
 
     setValidation(loginValidation);
     setAuthError(false);

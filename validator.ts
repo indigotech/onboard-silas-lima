@@ -1,4 +1,4 @@
-import { UserRole } from './types/UserRole'; 
+import { UserRole } from './types/UserRole';
 
 const emailValidator = new RegExp('[a-zA-Z0-9.]+@[a-zA-Z0-9]+[.][a-zA-Z]+([.][a-zA-Z]+)?');
 const passwordValidator = new RegExp('(?=.*[0-9])(?=.*[a-zA-Z]).{7,}');
@@ -19,7 +19,6 @@ export const validateLogin = (email: string, password: string) => {
       isValid: isValidPassword,
       errorMessage: isValidPassword ? '' : 'Insira uma senha válida!',
     },
-    isValidInput: isValidEmail && isValidPassword,
   };
 };
 
@@ -40,7 +39,7 @@ export const validateSignUp = (
   const isValidPhone = phoneValidator.test(phone) && Number(phone) > 0;
   const isValidBirthDate = birthDateValidator.test(birthDate) && birth > minBirthDate && birth < today;
   const isValidPassword = passwordValidator.test(password);
-  const isValidRole = role == 'admin' || role == 'user';
+  const isValidRole = role === 'admin' || role === 'user';
 
   return {
     name: {
