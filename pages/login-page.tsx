@@ -58,8 +58,13 @@ export const LoginPage = (props: NavigationComponentProps) => {
     setPasswordError(!validation.isValidPassword);
     setAuthError(false);
 
-    if (validation.isValidEmail && validation.isValidPassword){
-      loginMutation({variables: {input: { email: email, password: password}}});
+    if (validation.isValidInput){
+      loginMutation({variables: {
+        input: { 
+          email: email, 
+          password: password
+        }
+      }});
     }
   }
 

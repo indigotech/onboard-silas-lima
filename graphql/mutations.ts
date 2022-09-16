@@ -7,3 +7,13 @@ export const loginMutationGQL = gql`
     }
   }
 `
+
+export const createUserMutationGQL = gql`
+  mutation($input: UserInputType!) {
+    createUser(data: $input) {
+      id,
+      name
+    }
+  }
+`
+
