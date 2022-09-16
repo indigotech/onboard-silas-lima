@@ -24,12 +24,18 @@ export const UserDetailPage = (props: { id: string }) => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View isDarkMode={ isDarkMode }>
-          <Title>Dados do Usuário</Title>
-          
-          {loading && <ActivityIndicator />}
-          <Text style={Styles.inputTitle}> Nome</Text>
-          <Text style={Styles.userInfoContainer}>{data?.user.name}</Text>
+      <View isDarkMode={isDarkMode}>
+        <Title>Dados do Usuário</Title>
+
+        {loading && <ActivityIndicator />}
+        <Text style={Styles.inputTitle}> Nome</Text>
+        <Text style={Styles.userInfoContainer}>{data?.user.name}</Text>
+
+        <Text style={Styles.inputTitle}> E-mail </Text>
+        <Text style={Styles.userInfoContainer}>{data?.user.email}</Text>
+
+        <Text style={Styles.inputTitle}> Telefone </Text>
+        <Text style={Styles.userInfoContainer}>{data?.user.phone}</Text>
 
         <Text style={Styles.inputTitle}> Data de Nascimento </Text>
         <Text style={Styles.userInfoContainer}>{data?.user.birthDate}</Text>

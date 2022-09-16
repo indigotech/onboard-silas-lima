@@ -1,6 +1,7 @@
 import { UserRole } from './types/UserRole';
 
 export type SingleValidation = { isValid: boolean; errorMessage: string };
+
 export type LoginValidation = {
   email: SingleValidation;
   password: SingleValidation;

@@ -6,7 +6,7 @@ import {
   StatusBar,
   Text,
   TouchableOpacity,
-  useColorScheme
+  useColorScheme,
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { Styles } from '../styles';
@@ -26,80 +26,71 @@ export const UsersPage = (props: NavigationComponentProps) => {
   const redirectAddUserPage = () => {
     Navigation.push(props.componentId, {
       component: {
-        name: 'addUserPage'
-      }
+        name: 'addUserPage',
+      },
     });
-  }
+  };
 
   const [offset, setOffset] = useState(25);
 
-  const {data, error, fetchMore, networkStatus} = useQuery(usersQueryGQL,
-    {
-      client: client,
-      variables: {input: { offset: 0, limit: 25}},
-      onError: () => {
-        console.log(error);
-      },
-      notifyOnNetworkStatusChange: true
-    }
-  );
+  const { data, error, fetchMore, networkStatus } = useQuery(usersQueryGQL, {
+    client: client,
+    variables: { input: { offset: 0, limit: 25 } },
+    onError: () => {
+      console.log(error);
+    },
+    notifyOnNetworkStatusChange: true,
+  });
 
   const fetchingMore = networkStatus === NetworkStatus.fetchMore;
 
   const loadMoreUsers = () => {
-    if (!fetchingMore){
-      setOffset(offset+25);
-      fetchMore({variables: {input: { offset: offset, limit: 25}}});
+    if (!fetchingMore) {
+      setOffset(offset + 25);
+      fetchMore({ variables: { input: { offset: offset, limit: 25 } } });
     }
-  }
+  };
 
   const listUserDetails = (id: string) => {
     Navigation.push(props.componentId, {
       component: {
         name: 'userDetailPage',
         passProps: {
-          id: id
-        }
-      }
+          id: id,
+        },
+      },
     });
-  }
+  };
 
   const renderUserList = (item: User) => {
     return (
-      <TouchableOpacity
-        onPress={() => listUserDetails(item.id)}
-        style={Styles.userList}
-      >
+      <TouchableOpacity onPress={() => listUserDetails(item.id)} style={Styles.userList}>
         <Text style={Styles.userListSource}>
-          Usuário {item.id}: {item.name}{'\n'}
+          Usuário {item.id}: {item.name}
+          {'\n'}
           Email: {item.email}
         </Text>
       </TouchableOpacity>
-    )
-  }
+    );
+  };
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View isDarkMode={ isDarkMode }>
-          <Title>Lista de Usuários</Title>
+      <View isDarkMode={isDarkMode}>
+        <Title>Lista de Usuários</Title>
 
-          <TouchableOpacity 
-            onPress={redirectAddUserPage}
-            style={{...Styles.button, backgroundColor: "#841584"}}
-          >
-            <Text style={{...Styles.sectionTitle, color: "white"}}>
-              Adicionar Novo Usuário
-            </Text>
-          </TouchableOpacity>
-          <FlatList 
-            data={data?.users.nodes}
-            renderItem={({item}) => renderUserList(item)}
-            keyExtractor={(item) => item.id}
-            onEndReached={loadMoreUsers}
-            onEndReachedThreshold={0.25}
-            ListFooterComponent={fetchingMore ? <ActivityIndicator></ActivityIndicator> : null}
-          /> 
+        <TouchableOpacity onPress={redirectAddUserPage} style={{ ...Styles.button, backgroundColor: '#841584' }}>
+          <Text style={{ ...Styles.sectionTitle, color: 'white' }}>Adicionar Novo Usuário</Text>
+        </TouchableOpacity>
+        <FlatList
+          data={data?.users.nodes}
+          renderItem={({ item }) => renderUserList(item)}
+          keyExtractor={(item) => item.id}
+          onEndReached={loadMoreUsers}
+          onEndReachedThreshold={0.25}
+          ListFooterComponent={fetchingMore ? <ActivityIndicator></ActivityIndicator> : null}
+        />
       </View>
     </SafeAreaView>
   );

@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import React from 'react';
 import styled from 'styled-components/native';
 import { ActivityIndicator } from 'react-native';
-import { SingleValidation } from './validator';
+import { ActionButtonProps, FormFieldProps, OptionSelectorProps } from './interfaces/styled-components';
 
 export const View = styled.View<{ isDarkMode: boolean }>`
   background-color: ${(props) => (props.isDarkMode ? '#000000' : '#FFFFFF')};
@@ -74,17 +74,11 @@ export const ErrorMessage = styled.Text`
   color: #c11a26;
   font-size: 12px;
   font-weight: normal;
-
   margin-top: 8px;
   margin-horizontal: 20px;
 `;
 
-export const FormField = (props: {
-  label: string;
-  placeholder?: string;
-  validation: SingleValidation;
-  onChangeText: (value: string) => void;
-}) => {
+export const FormField = (props: FormFieldProps) => {
   return (
     <Fragment>
       <FormLabel isValidInput={props.validation.isValid}> {props.label} </FormLabel>
@@ -99,7 +93,7 @@ export const FormField = (props: {
   );
 };
 
-export const ActionButton = (props: { label: string; loading: boolean; handlePress: () => void }) => {
+export const ActionButton = (props: ActionButtonProps) => {
   return (
     <ButtonContainer onPress={props.handlePress} disabled={props.loading}>
       {props.loading && <ActivityIndicator color='#00002D' />}
@@ -108,7 +102,7 @@ export const ActionButton = (props: { label: string; loading: boolean; handlePre
   );
 };
 
-export const OptionSelector = (props: { option: string; selectedOption: boolean; onPress: () => void }) => {
+export const OptionSelector = (props: OptionSelectorProps) => {
   return (
     <OptionContainer onPress={props.onPress} selectedOption={props.selectedOption}>
       <OptionText selectedOption={props.selectedOption}>{props.option}</OptionText>

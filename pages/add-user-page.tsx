@@ -4,10 +4,11 @@ import { Alert, SafeAreaView, ScrollView, StatusBar, useColorScheme } from 'reac
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { createUserMutationGQL } from '../graphql/mutations';
-import { SignUpValidation, validateSignUp } from '../validator';
+import { validateSignUp } from '../validator';
 import { client } from '../services/apollo';
 import { ActionButton, ErrorMessage, FormField, FormLabel, Title, OptionSelector, View } from '../styled-components';
 import { UserRole } from '../types/UserRole';
+import { SignUpValidation } from '../interfaces/validations';
 
 export const AddUserPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -75,7 +76,7 @@ export const AddUserPage = (props: NavigationComponentProps) => {
     setValidation(signUpValidation);
     setCreateUserError(false);
 
-    if (validation.isValidInput) {
+    if (signUpValidation.isValidInput) {
       addUserMutation({
         variables: {
           input: {
@@ -98,20 +99,20 @@ export const AddUserPage = (props: NavigationComponentProps) => {
         <View isDarkMode={isDarkMode}>
           <Title>Cadastrar Usuário</Title>
 
-          <FormField label='Nome' validation={validation.name} onChangeText={(n) => setName(n)} />
+          <FormField label='Nome' validation={validation.name} onChangeText={setName} />
 
-          <FormField label='E-mail' validation={validation.email} onChangeText={(e) => setEmail(e)} />
+          <FormField label='E-mail' validation={validation.email} onChangeText={setEmail} />
 
-          <FormField label='Telefone' validation={validation.phone} onChangeText={(p) => setPhone(p)} />
+          <FormField label='Telefone' validation={validation.phone} onChangeText={setPhone} />
 
           <FormField
             label='Data de Nascimento'
             placeholder='FORMATO YYYY-MM-DD'
             validation={validation.birthDate}
-            onChangeText={(bd) => setBirthDate(bd)}
+            onChangeText={setBirthDate}
           />
 
-          <FormField label='Senha' validation={validation.password} onChangeText={(p) => setPassword(p)} />
+          <FormField label='Senha' validation={validation.password} onChangeText={setPassword} />
 
           <FormLabel isValidInput={validation.role.isValid}> Cargo </FormLabel>
           <OptionSelector option={'Administrador'} selectedOption={role === 'admin'} onPress={() => setRole('admin')} />
