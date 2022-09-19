@@ -1,24 +1,14 @@
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
-import { Styles } from '../styles';
+import { SafeAreaView, ScrollView, StatusBar, useColorScheme } from 'react-native';
 import { setStorageValue } from '../persistency';
-import { loginValidator } from '../regex';
+import { validateLogin } from '../validator';
 import { client } from '../services/apollo';
 import { useMutation } from '@apollo/client';
 import { loginMutationGQL } from '../graphql/mutations';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import React, { useState } from 'react';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
-import { Title } from '../styled-components';
+import { ActionButton, ErrorMessage, FormField, Title, View } from '../styled-components';
+import { LoginValidation } from '../interfaces/validations';
 
 export const LoginPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -29,92 +19,66 @@ export const LoginPage = (props: NavigationComponentProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
+  const [validation, setValidation] = useState<LoginValidation>({
+    email: {
+      isValid: true,
+      errorMessage: '',
+    },
+    password: {
+      isValid: true,
+      errorMessage: '',
+    },
+  });
 
   const [authError, setAuthError] = useState(false);
-  
-  const [loginMutation, {loading, error}] = useMutation(loginMutationGQL, 
-    {
-      client: client, 
-      onCompleted: (data) => {
-        setStorageValue('@token', data.login.token);
-        Navigation.push(props.componentId, {
-          component: {
-            name: 'usersPage'
-          }
-        });
-      },
-      onError: () => {
-        setAuthError(true);
-      }
-    }
-  );
-  
-  const handleSubmit = () => {
-    const validation = loginValidator(email, password);
 
-    setEmailError(!validation.isValidEmail);
-    setPasswordError(!validation.isValidPassword);
+  const [loginMutation, { loading, error }] = useMutation(loginMutationGQL, {
+    client: client,
+    onCompleted: (data) => {
+      setStorageValue('@token', data.login.token);
+      Navigation.push(props.componentId, {
+        component: {
+          name: 'usersPage',
+        },
+      });
+    },
+    onError: () => {
+      setAuthError(true);
+    },
+  });
+
+  const handleSubmit = () => {
+    const loginValidation = validateLogin(email, password);
+    const isValidInput = Object.values(loginValidation).every((isValid) => isValid);
+
+    setValidation(loginValidation);
     setAuthError(false);
 
-    if (validation.isValidInput){
-      loginMutation({variables: {
-        input: { 
-          email: email, 
-          password: password
-        }
-      }});
+    if (isValidInput) {
+      loginMutation({
+        variables: {
+          input: {
+            email: email,
+            password: password,
+          },
+        },
+      });
     }
-  }
+  };
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+      <ScrollView contentInsetAdjustmentBehavior='automatic' style={backgroundStyle}>
+        <View isDarkMode={isDarkMode}>
           <Title>Bem-Vindo(a) à Taqtile!</Title>
 
-          <Text style={Styles.inputTitle}> E-mail </Text>
-          {emailError && <Text style={Styles.errorMessage}>
-            Insira um endereço de e-mail válido!
-          </Text>}
-          <TextInput 
-            value={email} 
-            keyboardType='email-address'
-            style={Styles.userInfoContainer} 
-            onChangeText={(e) => setEmail(e)}
-          />
+          <FormField label='E-mail' validation={validation.email} onChangeText={setEmail} />
 
-          <Text style={Styles.inputTitle}> Senha </Text>
-          {passwordError && <Text style={Styles.errorMessage}>
-            Insira uma senha válida!
-            {'\n'}- Mínimo de 7 caracteres
-            {'\n'}- Mínimo de 1 dígito e 1 letra
-          </Text>}
-          <TextInput
-            value={password}
-            secureTextEntry={true}
-            style={Styles.userInfoContainer} 
-            onChangeText={(p) => setPassword(p)}
-          />
-          
-          <TouchableOpacity 
-            onPress={handleSubmit}
-            disabled={loading}
-            style={{...Styles.button, backgroundColor: loading? "#FEB800": "#841584"}}
-          >
-            {loading && <ActivityIndicator color="#00002D"/>}
-            <Text style={{...Styles.sectionTitle, color: loading? "#AAAAAA": "#FFFFFF"}}>
-              Entrar
-            </Text>
-          </TouchableOpacity>
-          {authError &&<Text style={Styles.errorMessage}>{error?.message}</Text>}
+          <FormField label='Senha' validation={validation.password} onChangeText={setPassword} />
+
+          <ActionButton label='Entrar' loading={loading} handlePress={handleSubmit} />
+          {authError && <ErrorMessage>{error?.message}</ErrorMessage>}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -1,25 +1,14 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { Alert, SafeAreaView, ScrollView, StatusBar, useColorScheme } from 'react-native';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { createUserMutationGQL } from '../graphql/mutations';
-import { signinValidator } from '../regex';
+import { validateSignUp } from '../validator';
 import { client } from '../services/apollo';
-import { Title } from '../styled-components';
-import { Styles } from '../styles';
+import { ActionButton, ErrorMessage, FormField, FormLabel, Title, OptionSelector, View } from '../styled-components';
 import { UserRole } from '../types/UserRole';
+import { SignUpValidation } from '../interfaces/validations';
 
 export const AddUserPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -34,12 +23,32 @@ export const AddUserPage = (props: NavigationComponentProps) => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<UserRole>();
 
-  const [nameError, setNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
-  const [birthDateError, setBirthDateError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [roleError, setRoleError] = useState(false);
+  const [validation, setValidation] = useState<SignUpValidation>({
+    name: {
+      isValid: true,
+      errorMessage: '',
+    },
+    email: {
+      isValid: true,
+      errorMessage: '',
+    },
+    phone: {
+      isValid: true,
+      errorMessage: '',
+    },
+    birthDate: {
+      isValid: true,
+      errorMessage: '',
+    },
+    password: {
+      isValid: true,
+      errorMessage: '',
+    },
+    role: {
+      isValid: true,
+      errorMessage: '',
+    },
+  });
 
   const [createUserError, setCreateUserError] = useState(false);
 
@@ -62,17 +71,13 @@ export const AddUserPage = (props: NavigationComponentProps) => {
   });
 
   const handleSubmit = () => {
-    const validation = signinValidator(name, email, phone, birthDate, password, role);
+    const signUpValidation = validateSignUp(name, email, phone, birthDate, password, role);
+    const isValidInput = Object.values(signUpValidation).every((isValid) => isValid);
 
-    setNameError(!validation.isValidName);
-    setEmailError(!validation.isValidEmail);
-    setPhoneError(!validation.isValidPhone);
-    setBirthDateError(!validation.isValidBirthDate);
-    setPasswordError(!validation.isValidPassword);
-    setRoleError(!validation.isValidRole);
+    setValidation(signUpValidation);
     setCreateUserError(false);
 
-    if (validation.isValidInput) {
+    if (isValidInput) {
       addUserMutation({
         variables: {
           input: {
@@ -92,81 +97,31 @@ export const AddUserPage = (props: NavigationComponentProps) => {
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView contentInsetAdjustmentBehavior='automatic' style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
+        <View isDarkMode={isDarkMode}>
           <Title>Cadastrar Usuário</Title>
-          <Text style={Styles.inputTitle}> Nome </Text>
-          {nameError && <Text style={Styles.errorMessage}>Insira um nome válido!</Text>}
-          <TextInput value={name} style={Styles.userInfoContainer} onChangeText={(n) => setName(n)} />
 
-          <Text style={Styles.inputTitle}> E-mail </Text>
-          {emailError && <Text style={Styles.errorMessage}>Insira um endereço de e-mail válido!</Text>}
-          <TextInput
-            value={email}
-            keyboardType='email-address'
-            style={Styles.userInfoContainer}
-            onChangeText={(e) => setEmail(e)}
-          />
+          <FormField label='Nome' validation={validation.name} onChangeText={setName} />
 
-          <Text style={Styles.inputTitle}> Telefone </Text>
-          {phoneError && <Text style={Styles.errorMessage}>Insira um número de telefone válido!</Text>}
-          <TextInput value={phone} style={Styles.userInfoContainer} onChangeText={(p) => setPhone(p)} />
+          <FormField label='E-mail' validation={validation.email} onChangeText={setEmail} />
 
-          <Text style={Styles.inputTitle}> Data de Nascimento </Text>
-          {birthDateError && <Text style={Styles.errorMessage}>Insira uma data válida (formato: YYYY-MM-DD)!</Text>}
-          <TextInput
+          <FormField label='Telefone' validation={validation.phone} onChangeText={setPhone} />
+
+          <FormField
+            label='Data de Nascimento'
             placeholder='FORMATO YYYY-MM-DD'
-            value={birthDate}
-            style={Styles.userInfoContainer}
-            onChangeText={(bd) => setBirthDate(bd)}
+            validation={validation.birthDate}
+            onChangeText={setBirthDate}
           />
 
-          <Text style={Styles.inputTitle}> Senha </Text>
-          {passwordError && (
-            <Text style={Styles.errorMessage}>
-              Insira uma senha válida!
-              {'\n'}- Mínimo de 7 caracteres
-              {'\n'}- Mínimo de 1 dígito e 1 letra
-            </Text>
-          )}
-          <TextInput
-            value={password}
-            secureTextEntry={true}
-            style={Styles.userInfoContainer}
-            onChangeText={(p) => setPassword(p)}
-          />
+          <FormField label='Senha' validation={validation.password} onChangeText={setPassword} />
 
-          <Text style={Styles.inputTitle}> Cargo </Text>
-          {roleError && <Text style={Styles.errorMessage}>Selecione um Cargo!</Text>}
-          <TouchableOpacity
-            onPress={() => setRole('admin')}
-            style={{
-              ...Styles.roleSelector,
-              backgroundColor: role == 'admin' ? 'black' : 'white',
-            }}
-          >
-            <Text style={{ color: role == 'admin' ? 'white' : 'black' }}>Administrador</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setRole('user')}
-            style={{
-              ...Styles.roleSelector,
-              backgroundColor: role == 'user' ? 'black' : 'white',
-            }}
-          >
-            <Text style={{ color: role == 'user' ? 'white' : 'black' }}>Usuário</Text>
-          </TouchableOpacity>
+          <FormLabel isValidInput={validation.role.isValid}> Cargo </FormLabel>
+          <OptionSelector option={'Administrador'} selectedOption={role === 'admin'} onPress={() => setRole('admin')} />
+          <OptionSelector option={'Usuário'} selectedOption={role === 'user'} onPress={() => setRole('user')} />
+          {!validation.role.isValid && <ErrorMessage> {validation.role.errorMessage} </ErrorMessage>}
 
-          <TouchableOpacity
-            onPress={handleSubmit}
-            style={{ ...Styles.button, backgroundColor: loading ? '#FEB800' : '#841584' }}
-          >
-            {loading && <ActivityIndicator color='#00002D' />}
-            <Text style={{ ...Styles.sectionTitle, color: loading ? '#AAAAAA' : '#FFFFFF' }}>Cadastrar</Text>
-          </TouchableOpacity>
-          {createUserError && <Text style={Styles.errorMessage}>{error?.message}</Text>}
+          <ActionButton label='Cadastrar' loading={loading} handlePress={handleSubmit} />
+          {createUserError && <ErrorMessage>{error?.message}</ErrorMessage>}
         </View>
       </ScrollView>
     </SafeAreaView>
