@@ -72,7 +72,7 @@ export const AddUserPage = (props: NavigationComponentProps) => {
 
   const handleSubmit = () => {
     const signUpValidation = validateSignUp(name, email, phone, birthDate, password, role);
-    const isValidInput = Object.values(signUpValidation).every((isValid) => isValid);
+    const isValidInput = Object.values(signUpValidation).every((input) => input.isValid);
 
     setValidation(signUpValidation);
     setCreateUserError(false);
