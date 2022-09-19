@@ -100,27 +100,27 @@ export const AddUserPage = (props: NavigationComponentProps) => {
           <Section title='Cadastrar Usuário' />
           <Text style={Styles.inputTitle}> Nome </Text>
           {nameError && <Text style={Styles.errorMessage}>Insira um nome válido!</Text>}
-          <TextInput value={name} style={Styles.signinInputContainer} onChangeText={(n) => setName(n)} />
+          <TextInput value={name} style={Styles.userInfoContainer} onChangeText={(n) => setName(n)} />
 
           <Text style={Styles.inputTitle}> E-mail </Text>
           {emailError && <Text style={Styles.errorMessage}>Insira um endereço de e-mail válido!</Text>}
           <TextInput
             value={email}
             keyboardType='email-address'
-            style={Styles.signinInputContainer}
+            style={Styles.userInfoContainer}
             onChangeText={(e) => setEmail(e)}
           />
 
           <Text style={Styles.inputTitle}> Telefone </Text>
           {phoneError && <Text style={Styles.errorMessage}>Insira um número de telefone válido!</Text>}
-          <TextInput value={phone} style={Styles.signinInputContainer} onChangeText={(p) => setPhone(p)} />
+          <TextInput value={phone} style={Styles.userInfoContainer} onChangeText={(p) => setPhone(p)} />
 
           <Text style={Styles.inputTitle}> Data de Nascimento </Text>
           {birthDateError && <Text style={Styles.errorMessage}>Insira uma data válida (formato: YYYY-MM-DD)!</Text>}
           <TextInput
             placeholder='FORMATO YYYY-MM-DD'
             value={birthDate}
-            style={Styles.signinInputContainer}
+            style={Styles.userInfoContainer}
             onChangeText={(bd) => setBirthDate(bd)}
           />
 
@@ -135,7 +135,7 @@ export const AddUserPage = (props: NavigationComponentProps) => {
           <TextInput
             value={password}
             secureTextEntry={true}
-            style={Styles.signinInputContainer}
+            style={Styles.userInfoContainer}
             onChangeText={(p) => setPassword(p)}
           />
 

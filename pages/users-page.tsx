@@ -54,12 +54,28 @@ export const UsersPage = (props: NavigationComponentProps) => {
     }
   }
 
-  const renderUser = (item: User) => {
+  const listUserDetails = (id: string) => {
+    Navigation.push(props.componentId, {
+      component: {
+        name: 'userDetailPage',
+        passProps: {
+          id: id
+        }
+      }
+    });
+  }
+
+  const renderUserList = (item: User) => {
     return (
-      <Text style={Styles.userList}>
-        Usuário {item.id}: {item.name}{'\n'}
-        Email: {item.email}
-      </Text>
+      <TouchableOpacity
+        onPress={() => listUserDetails(item.id)}
+        style={Styles.userList}
+      >
+        <Text style={Styles.userListSource}>
+          Usuário {item.id}: {item.name}{'\n'}
+          Email: {item.email}
+        </Text>
+      </TouchableOpacity>
     )
   }
 
@@ -81,7 +97,7 @@ export const UsersPage = (props: NavigationComponentProps) => {
           </TouchableOpacity>
           <FlatList 
             data={data?.users.nodes}
-            renderItem={({item}) => renderUser(item)}
+            renderItem={({item}) => renderUserList(item)}
             keyExtractor={(item) => item.id}
             onEndReached={loadMoreUsers}
             onEndReachedThreshold={0.25}

@@ -18,16 +18,8 @@ export const Styles = StyleSheet.create({
       fontWeight: "400",
       marginLeft: 15,
     },
-    loginInputContainer: {
-      height: 60,
-      margin: 15,
-      padding: 10,
-      borderWidth: 2,
-      borderColor: "#AAAAAA",
-      borderRadius: 10,
-    },
-    signinInputContainer: {
-      height: 35,
+    userInfoContainer: {
+      height: 40,
       marginHorizontal: 15,
       marginVertical: 10,
       padding: 10,
@@ -59,13 +51,16 @@ export const Styles = StyleSheet.create({
       marginLeft: 15,
       color: 'red',
     },
-    userList: {
+    userListSource: {
       fontWeight: "500",
-      marginHorizontal: 15,
-      marginVertical: 2,
       paddingHorizontal: 10,
       paddingVertical: 5,
       color: "white",
-      backgroundColor: "black",
     },
+    userList: {
+      marginHorizontal: 15,
+      marginVertical: 2,
+      borderRadius: 10,
+      backgroundColor: "black",
+    }
 });

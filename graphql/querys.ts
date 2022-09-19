@@ -11,3 +11,15 @@ export const usersQueryGQL = gql`
     }
   }
 `
+
+export const userQueryGQL = gql`
+  query($input: ID!) {
+    user(id: $input) {
+      name,
+      phone,
+      email,
+      birthDate,
+      role
+    }
+  }
+`
