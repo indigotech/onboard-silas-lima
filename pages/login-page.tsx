@@ -82,7 +82,7 @@ export const LoginPage = (props: NavigationComponentProps) => {
           <TextInput 
             value={email} 
             keyboardType='email-address'
-            style={Styles.inputContainer} 
+            style={Styles.loginInputContainer} 
             onChangeText={(e) => setEmail(e)}
           />
 
@@ -95,7 +95,7 @@ export const LoginPage = (props: NavigationComponentProps) => {
           <TextInput
             value={password}
             secureTextEntry={true}
-            style={Styles.inputContainer} 
+            style={Styles.loginInputContainer} 
             onChangeText={(p) => setPassword(p)}
           />
           
