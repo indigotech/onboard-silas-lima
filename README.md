@@ -2,7 +2,7 @@ Onboard - 01.09.2022
 Projeto desenvolvido durante o processo de Onboarding
 
 Environment and Tools
-- Typescript ^4.4.4
+- Typescript 4.4.4
 - React 18.0.0
 - React-native 0.69.5
 - Android Studio Chipmunk 2021.2.1 Patch 2
@@ -13,6 +13,7 @@ Environment and Tools
 - Async-storage 1.17.10
 - Graphql 16.6.0
 - React-native-navigation 7.29.0
+- Styled-components 5.3.5
 
 Steps to run and debug
 - Open the terminal on the root of the project and run the command

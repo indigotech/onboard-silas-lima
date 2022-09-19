@@ -10,13 +10,13 @@ import {
   View,
 } from 'react-native';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { Section } from '../section';
 import { Styles } from '../styles';
 import { usersQueryGQL } from '../graphql/querys';
 import { client } from '../services/apollo';
 import { NetworkStatus, useQuery } from '@apollo/client';
 import { User } from '../interfaces/users';
 import { Navigation, NavigationComponentProps } from 'react-native-navigation';
+import { Title } from '../styled-components';
 
 export const UsersPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -86,7 +86,8 @@ export const UsersPage = (props: NavigationComponentProps) => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Section title="Lista de Usuários"/>
+          <Title>Lista de Usuários</Title>
+
           <TouchableOpacity 
             onPress={redirectAddUserPage}
             style={{...Styles.button, backgroundColor: "#841584"}}

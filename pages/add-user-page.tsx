@@ -16,8 +16,8 @@ import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { createUserMutationGQL } from '../graphql/mutations';
 import { signinValidator } from '../regex';
-import { Section } from '../section';
 import { client } from '../services/apollo';
+import { Title } from '../styled-components';
 import { Styles } from '../styles';
 import { UserRole } from '../types/UserRole';
 
@@ -95,9 +95,8 @@ export const AddUserPage = (props: NavigationComponentProps) => {
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}
-        >
-          <Section title='Cadastrar Usuário' />
+          }}>
+          <Title>Cadastrar Usuário</Title>
           <Text style={Styles.inputTitle}> Nome </Text>
           {nameError && <Text style={Styles.errorMessage}>Insira um nome válido!</Text>}
           <TextInput value={name} style={Styles.userInfoContainer} onChangeText={(n) => setName(n)} />
