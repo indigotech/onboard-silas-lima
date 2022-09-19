@@ -1,5 +1,8 @@
+import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -9,13 +12,16 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import { Navigation, NavigationComponentProps } from 'react-native-navigation';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { createUserMutationGQL } from '../graphql/mutations';
 import { signinValidator } from '../regex';
 import { Section } from '../section';
+import { client } from '../services/apollo';
 import { Styles } from '../styles';
 import { UserRole } from '../types/UserRole';
 
-export const AddUserPage = () => {
+export const AddUserPage = (props: NavigationComponentProps) => {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -35,6 +41,26 @@ export const AddUserPage = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [roleError, setRoleError] = useState(false);
 
+  const [createUserError, setCreateUserError] = useState(false);
+
+  const [addUserMutation, { loading, error }] = useMutation(createUserMutationGQL, {
+    client: client,
+    onCompleted: (data) => {
+      Alert.alert(
+        'Usuario Cadastrado!',
+        `O usuário ${data.createUser.name} - id ${data.createUser.id} foi cadastrado com sucesso.`,
+      );
+      Navigation.push(props.componentId, {
+        component: {
+          name: 'usersPage',
+        },
+      });
+    },
+    onError: () => {
+      setCreateUserError(true);
+    },
+  });
+
   const handleSubmit = () => {
     const validation = signinValidator(name, email, phone, birthDate, password, role);
 
@@ -44,6 +70,22 @@ export const AddUserPage = () => {
     setBirthDateError(!validation.isValidBirthDate);
     setPasswordError(!validation.isValidPassword);
     setRoleError(!validation.isValidRole);
+    setCreateUserError(false);
+
+    if (validation.isValidInput) {
+      addUserMutation({
+        variables: {
+          input: {
+            name: name,
+            email: email,
+            phone: phone,
+            birthDate: birthDate,
+            password: password,
+            role: role,
+          },
+        },
+      });
+    }
   };
 
   return (
@@ -103,24 +145,29 @@ export const AddUserPage = () => {
             onPress={() => setRole('admin')}
             style={{
               ...Styles.roleSelector,
-              backgroundColor: role === 'admin' ? 'black' : 'white',
+              backgroundColor: role == 'admin' ? 'black' : 'white',
             }}
           >
-            <Text style={{ color: role === 'admin' ? 'white' : 'black' }}>Administrador</Text>
+            <Text style={{ color: role == 'admin' ? 'white' : 'black' }}>Administrador</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setRole('user')}
             style={{
               ...Styles.roleSelector,
-              backgroundColor: role === 'user' ? 'black' : 'white',
+              backgroundColor: role == 'user' ? 'black' : 'white',
             }}
           >
-            <Text style={{ color: role === 'user' ? 'white' : 'black' }}>Usuário</Text>
+            <Text style={{ color: role == 'user' ? 'white' : 'black' }}>Usuário</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleSubmit} style={{ ...Styles.button, backgroundColor: '#841584' }}>
-            <Text style={{ ...Styles.sectionTitle, color: 'white' }}>Cadastrar</Text>
+          <TouchableOpacity
+            onPress={handleSubmit}
+            style={{ ...Styles.button, backgroundColor: loading ? '#FEB800' : '#841584' }}
+          >
+            {loading && <ActivityIndicator color='#00002D' />}
+            <Text style={{ ...Styles.sectionTitle, color: loading ? '#AAAAAA' : '#FFFFFF' }}>Cadastrar</Text>
           </TouchableOpacity>
+          {createUserError && <Text style={Styles.errorMessage}>{error?.message}</Text>}
         </View>
       </ScrollView>
     </SafeAreaView>
